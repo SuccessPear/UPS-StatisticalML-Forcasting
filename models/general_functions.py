@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.utils
 import torch.utils.data
 import torch.utils.data.dataloader
+import pandas as pd
+import numpy as np
 
 def train_step_regression(model: nn.Module,
                         data_loader: torch.utils.data.DataLoader,
@@ -76,3 +78,14 @@ def test_step_regression(model: nn.Module,
             
         total_loss /= len(data_loader)
     return total_loss
+
+def create_sequences(data:pd.DataFrame, 
+                     target:pd.DataFrame, 
+                     seq_length=5):
+    out = []
+    
+    for i in range(len(data) - seq_length):
+        X = data.iloc[i:i+seq_length].values  # Features
+        y = target.iloc[i+seq_length]     # Target (meantemp)
+        out.append((X, y))
+    return out
